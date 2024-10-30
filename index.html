@@ -1,4 +1,4 @@
-<html><head><base href="/">
+<!-- <html><head><base href="/">
     <title>MIGEPROF Information Assistant</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -760,3 +760,878 @@
     </body>
     </html>
 
+ -->
+
+<html><head><base href="/">
+<title>MIGEPROF Information Assistant</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+    --primary: #7E57C2;
+    --secondary: #B388FF;
+    --accent: #E8EAF6;
+    --light: #F5F6FF;
+    --text: #2C3E50;
+    --gradient: linear-gradient(135deg, #7E57C2, #B388FF);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: var(--light);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+.chat-container {
+    max-width: 1400px;
+    margin: 2rem auto;
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 2rem;
+    padding: 1.5rem;
+    height: calc(100vh - 4rem);
+}
+
+.topics-sidebar {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(126, 87, 194, 0.1);
+    backdrop-filter: blur(10px);
+    height: 100%;
+    transition: transform 0.3s ease;
+}
+
+.topics-sidebar:hover {
+    transform: translateY(-5px);
+}
+
+.topics-sidebar h2 {
+    color: var(--primary);
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.topics-sidebar h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 50px;
+    height: 4px;
+    background: var(--gradient);
+    border-radius: 2px;
+}
+
+.topic-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.topic-item {
+    padding: 1.2rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: var(--light);
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+}
+
+.topic-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--gradient);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+}
+
+.topic-item:hover {
+    color: white;
+    transform: translateX(10px);
+}
+
+.topic-item:hover::before {
+    opacity: 1;
+}
+
+.topic-item span {
+    position: relative;
+    z-index: 2;
+}
+
+.chat-main {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 32px rgba(126, 87, 194, 0.1);
+    height: 100%;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--gradient);
+    color: white;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+}
+
+.language-selector {
+    margin-left: auto;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.lang-btn {
+    padding: 0.5rem 1rem;
+    border: 2px solid white;
+    background: transparent;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.lang-btn:hover {
+    background: white;
+    color: var(--primary);
+}
+
+.lang-btn.active {
+    background: white;
+    color: var(--primary);
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+    background: white;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    scroll-behavior: smooth;
+}
+
+.message {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 1.5rem 0;
+    max-width: 80%;
+    padding: 1.2rem;
+    border-radius: 16px;
+    position: relative;
+    animation: messageSlide 0.3s ease;
+}
+
+@keyframes messageSlide {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.bot-message {
+    background: var(--light);
+    margin-right: auto;
+    box-shadow: 0 4px 16px rgba(126, 87, 194, 0.1);
+}
+
+.user-message {
+    background: var(--gradient);
+    color: white;
+    margin-left: auto;
+}
+
+.message-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text);
+    opacity: 0.7;
+}
+
+.message-content {
+    line-height: 1.5;
+}
+
+.chat-input {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--accent);
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 1.2rem;
+    border: 2px solid var(--accent);
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: var(--light);
+}
+
+.voice-input {
+    background: var(--accent);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.voice-input:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.chat-input input:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(126, 87, 194, 0.1);
+}
+
+.chat-input button {
+    padding: 1.2rem 2.5rem;
+    background: var(--gradient);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.chat-input button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(126, 87, 194, 0.2);
+}
+
+.typing-indicator, .processing-indicator {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+    background: var(--light);
+    border-radius: 12px;
+    max-width: fit-content;
+}
+
+.processing-indicator {
+    margin: 1rem 0;
+}
+
+.processing-indicator .spinner {
+    width: 20px;
+    height: 20px;
+}
+
+.spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid var(--accent);
+    border-top: 3px solid var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.typing-text {
+    color: var(--primary);
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--light);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--secondary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .chat-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .topics-sidebar {
+        display: none;
+    }
+}
+
+/* Mobile Improvements */
+@media (max-width: 768px) {
+    .chat-container {
+        margin: 0;
+        height: 100vh;
+        border-radius: 0;
+    }
+    
+    .chat-input {
+        padding: 1rem;
+    }
+}
+
+.feedback-section {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-top: 2px solid var(--accent);
+}
+
+.feedback-section textarea {
+    width: 100%;
+    padding: 1rem;
+    margin: 1rem 0;
+    border: 2px solid var(--accent);
+    border-radius: 12px;
+    height: 100px;
+    resize: none;
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.stars {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.star {
+    color: #ddd;
+    cursor: pointer;
+    font-size: 1.5rem;
+    transition: color 0.3s ease;
+}
+
+.star.active {
+    color: var(--primary);
+}
+
+.copyright {
+    text-align: center;
+    padding: 1rem;
+    background: var(--gradient);
+    color: white;
+    font-size: 0.9rem;
+    margin-top: auto;
+    border-radius: 0 0 20px 20px;
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    (function() {
+        emailjs.init(process.env.EMAILJS_PUBLIC_KEY || "YOUR_EMAILJS_PUBLIC_KEY");
+    })();
+
+    const CONFIG = {
+        GITHUB_ACCESS_TOKEN: process.env.GITHUB_ACCESS_TOKEN || 'YOUR_GITHUB_TOKEN',
+        TAVILY_API_KEY: process.env.TAVILY_API_KEY || 'YOUR_TAVILY_API_KEY',
+        REPO_OWNER: 'GerediNIYIBIGIRA',
+        REPO_NAME: 'AI_ProjectMethod_Assignment'
+    };
+
+    const OPENAI_API_KEY = process.env.OPENAI_API_KEY || 'YOUR_OPENAI_API_KEY';
+</script>
+</head>
+<body>
+    <div class="chat-container">
+        <aside class="topics-sidebar">
+            <h2>Topics</h2>
+            <ul class="topic-list">
+                <li class="topic-item">Child Protection</li>
+                <li class="topic-item">Nutrition</li>
+                <li class="topic-item">Early Childhood Development</li>
+                <li class="topic-item">Family Promotion</li>
+                <li class="topic-item">Anti-GBV</li>
+                <li class="topic-item">Gender Equality</li>
+                <li class="topic-item">Women's Empowerment</li>
+            </ul>
+        </aside>
+
+        <main class="chat-main">
+            <div class="header">
+                <div class="logo">
+                    <svg width="30" height="30" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1>MIGEPROF Assistant</h1>
+                    <p>Your digital guide to gender and family promotion services</p>
+                </div>
+                <div class="language-selector">
+                    <button class="lang-btn" data-lang="en">English</button>
+                    <button class="lang-btn" data-lang="fr">Français</button>
+                    <button class="lang-btn" data-lang="rw">Kinyarwanda</button>
+                </div>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot-message">
+                    Hello! I'm your MIGEPROF Information Assistant. How can I help you today?
+                </div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="userInput" placeholder="Type your question here...">
+                <button onclick="sendMessage()">Send</button>
+                <button onclick="toggleFeedback()" style="background: var(--accent); color: var(--primary);">
+                    Feedback
+                </button>
+            </div>
+            <div class="feedback-section" style="display: none;">
+                <h3>Your Feedback</h3>
+                <textarea id="feedbackText" placeholder="Share your feedback here..."></textarea>
+                <div class="rating">
+                    <span>Rating:</span>
+                    <div class="stars">
+                        <span class="star" data-rating="1">★</span>
+                        <span class="star" data-rating="2">★</span>
+                        <span class="star" data-rating="3">★</span>
+                        <span class="star" data-rating="4">★</span>
+                        <span class="star" data-rating="5">★</span>
+                    </div>
+                </div>
+                <button onclick="submitFeedback()">Submit Feedback</button>
+            </div>
+            <div class="copyright">
+                © 2024 MIGEPROF Information Assistant. Developed and managed by Geredi Niyibigira
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                welcome: "Hello! I'm your MIGEPROF Information Assistant. How can I help you today?",
+                inputPlaceholder: "Type your question here...",
+                sendButton: "Send",
+                feedbackButton: "Feedback",
+                feedbackTitle: "Your Feedback",
+                feedbackPlaceholder: "Share your feedback here...",
+                ratingText: "Rating:",
+                submitFeedback: "Submit Feedback"
+            },
+            fr: {
+                welcome: "Bonjour! Je suis votre assistant d'information MIGEPROF. Comment puis-je vous aider aujourd'hui?",
+                inputPlaceholder: "Tapez votre question ici...",
+                sendButton: "Envoyer",
+                feedbackButton: "Commentaires",
+                feedbackTitle: "Vos Commentaires",
+                feedbackPlaceholder: "Partagez vos commentaires ici...",
+                ratingText: "Évaluation:",
+                submitFeedback: "Soumettre"
+            },
+            rw: {
+                welcome: "Muraho! Ndi umufasha wawe wa MIGEPROF. Ese nakugirira iyihe neza uyu munsi?",
+                inputPlaceholder: "Andika ikibazo cyawe hano...",
+                sendButton: "Ohereza",
+                feedbackButton: "Igitekerezo",
+                feedbackTitle: "Igitekerezo Cyawe",
+                feedbackPlaceholder: "Sangiza hano igitekerezo cyawe...",
+                ratingText: "Amanota:",
+                submitFeedback: "Ohereza Igitekerezo"
+            }
+        };
+
+        let currentLang = 'en';
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            
+            document.getElementById('userInput').placeholder = translations[lang].inputPlaceholder;
+            document.querySelector('.bot-message').textContent = translations[lang].welcome;
+            document.querySelector('.chat-input button').textContent = translations[lang].sendButton;
+            document.querySelector('.feedback-section h3').textContent = translations[lang].feedbackTitle;
+            document.getElementById('feedbackText').placeholder = translations[lang].feedbackPlaceholder;
+            document.querySelector('.rating span').textContent = translations[lang].ratingText;
+            
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+        }
+
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => changeLanguage(btn.dataset.lang));
+        });
+
+        let currentRating = 0;
+
+        function createTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot-message typing-indicator';
+            
+            const spinner = document.createElement('div');
+            spinner.className = 'spinner';
+            
+            const text = document.createElement('span');
+            text.className = 'typing-text';
+            text.textContent = 'MIGEPROF AI is thinking...';
+            
+            typingDiv.appendChild(spinner);
+            typingDiv.appendChild(text);
+            return typingDiv;
+        }
+
+        function showDocumentProcessing() {
+            const processingDiv = document.createElement('div');
+            processingDiv.className = 'message bot-message';
+            processingDiv.innerHTML = `
+                <div class="processing-indicator">
+                    <div class="spinner"></div>
+                    <span>Processing documents...</span>
+                </div>
+            `;
+            document.getElementById('chatMessages').appendChild(processingDiv);
+            return processingDiv;
+        }
+
+        function formatMessageContent(content) {
+            content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            content = content.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            return content;
+        }
+
+        async function shouldUseRAG(userMessage) {
+            const documentKeywords = [
+                'policy', 'procedure', 'guideline', 'document', 'report',
+                'statistics', 'regulation', 'law', 'program', 'initiative',
+                'contact', 'office', 'department', 'service'
+            ];
+            
+            const needsDocuments = documentKeywords.some(keyword => 
+                userMessage.toLowerCase().includes(keyword.toLowerCase())
+            );
+            
+            const factsPattern = /what|when|where|who|how|why|which/i;
+            const needsFacts = factsPattern.test(userMessage);
+            
+            return needsDocuments || needsFacts;
+        }
+
+        async function loadGithubDocuments() {
+            try {
+                const response = await axios.get(`https://api.github.com/repos/${CONFIG.REPO_OWNER}/${CONFIG.REPO_NAME}/contents`, {
+                    headers: {
+                        'Authorization': `token ${CONFIG.GITHUB_ACCESS_TOKEN}`
+                    }
+                });
+                
+                return response.data.filter(file => 
+                    file.name.endsWith('.txt') || 
+                    file.name.endsWith('.md') || 
+                    file.name.endsWith('.pdf')
+                );
+            } catch (error) {
+                console.error('Error loading GitHub documents:', error);
+                return [];
+            }
+        }
+
+        async function getOpenAIResponse(userMessage) {
+            let contextualInfo = '';
+            const needsRAG = await shouldUseRAG(userMessage);
+            
+            if (needsRAG) {
+                const processingIndicator = showDocumentProcessing();
+                
+                try {
+                    const [githubDocs, tavilySearch] = await Promise.all([
+                        loadGithubDocuments(),
+                        axios.get(`https://api.tavily.com/search`, {
+                            params: {
+                                q: userMessage,
+                                api_key: CONFIG.TAVILY_API_KEY
+                            }
+                        })
+                    ]);
+
+                    if (githubDocs.length > 0) {
+                        contextualInfo += 'Internal documents found: ' + 
+                            githubDocs.map(d => d.name).join(', ') + '\n';
+                    }
+
+                    if (tavilySearch.data.results && tavilySearch.data.results.length > 0) {
+                        contextualInfo += 'External sources: ' + 
+                            tavilySearch.data.results.slice(0, 2)
+                                .map(r => r.title)
+                                .join(', ');
+                    }
+
+                    processingIndicator.remove();
+                } catch (error) {
+                    console.error('RAG search error:', error);
+                    processingIndicator.remove();
+                }
+            }
+            
+            try {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${OPENAI_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: "gpt-3.5-turbo",
+                        messages: [{
+                            role: "system",
+                            content: `You are a helpful assistant for MIGEPROF (Ministry of Gender and Family Promotion) that provides information about policies, guidelines, services, and contact information. Context: ${contextualInfo}. Please respond in ${currentLang === 'en' ? 'English' : currentLang === 'fr' ? 'French' : 'Kinyarwanda'}.`
+                        }, {
+                            role: "user",
+                            content: userMessage
+                        }],
+                        temperature: 0.7,
+                        stream: true
+                    })
+                });
+
+                const reader = response.body.getReader();
+                let partialResponse = '';
+                const typingMessage = document.createElement('div');
+                typingMessage.className = 'message bot-message';
+                document.getElementById('chatMessages').appendChild(typingMessage);
+
+                while (true) {
+                    const {done, value} = await reader.read();
+                    if (done) break;
+                    
+                    const chunk = new TextDecoder().decode(value);
+                    const lines = chunk.split('\n');
+                    
+                    for (const line of lines) {
+                        if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+                            try {
+                                const jsonData = JSON.parse(line.slice(6));
+                                if (jsonData.choices[0].delta.content) {
+                                    partialResponse += jsonData.choices[0].delta.content;
+                                    typingMessage.innerHTML = formatMessageContent(partialResponse);
+                                }
+                            } catch (e) {
+                                console.error('Error parsing JSON:', e);
+                            }
+                        }
+                    }
+                }
+                return partialResponse;
+            } catch (error) {
+                console.error('Error:', error);
+                return "I apologize, but I'm having trouble connecting to the server. Please try again later.";
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                addMessage(message, 'user');
+                const typingIndicator = createTypingIndicator();
+                document.getElementById('chatMessages').appendChild(typingIndicator);
+                
+                const response = await getOpenAIResponse(message);
+                
+                typingIndicator.remove();
+                input.value = '';
+            }
+        }
+
+        function addMessage(text, sender) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+            
+            const header = document.createElement('div');
+            header.className = 'message-header';
+            header.innerHTML = `
+                <span>${sender === 'user' ? 'You' : 'MIGEPROF AI'}</span>
+                <span>${new Date().toLocaleTimeString()}</span>
+            `;
+            
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            content.innerHTML = formatMessageContent(text);
+            
+            messageDiv.appendChild(header);
+            messageDiv.appendChild(content);
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        document.getElementById('userInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        document.querySelectorAll('.topic-item').forEach(topic => {
+            topic.addEventListener('click', () => {
+                const topicName = topic.textContent;
+                addMessage(`What would you like to know about ${topicName}?`, 'bot');
+                document.getElementById('userInput').placeholder = `Ask your question about ${topicName}...`;
+                document.getElementById('userInput').focus();
+            });
+        });
+
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('mouseenter', (e) => {
+                const rating = e.target.dataset.rating;
+                highlightStars(rating);
+            });
+            
+            star.addEventListener('mouseleave', () => {
+                highlightStars(currentRating);
+            });
+            
+            star.addEventListener('click', (e) => {
+                currentRating = e.target.dataset.rating;
+                highlightStars(currentRating);
+            });
+        });
+
+        function highlightStars(rating) {
+            document.querySelectorAll('.star').forEach(star => {
+                star.classList.toggle('active', star.dataset.rating <= rating);
+            });
+        }
+
+        function toggleFeedback() {
+            const feedbackSection = document.querySelector('.feedback-section');
+            feedbackSection.style.display = feedbackSection.style.display === 'none' ? 'block' : 'none';
+        }
+
+        async function submitFeedback() {
+            const feedbackText = document.getElementById('feedbackText').value;
+            if (!feedbackText || currentRating === 0) {
+                alert('Please provide both feedback and rating');
+                return;
+            }
+
+            try {
+                const submitButton = document.querySelector('.feedback-section button');
+                submitButton.disabled = true;
+                submitButton.textContent = 'Sending...';
+
+                const result = await emailjs.send(
+                    "service_2ya3fhd", 
+                    "template_z7zxxzb", 
+                    {
+                        to_name: "MIGEPROF Team", 
+                        from_name: "MIGEPROF Information Assistant User", 
+                        message: `Feedback: ${feedbackText}\nRating: ${currentRating}/5`, 
+                        to_email: 'niygeredi@gmail.com',
+                        timestamp: new Date().toLocaleString()
+                    }
+                );
+
+                submitButton.disabled = false;
+                submitButton.textContent = translations[currentLang].submitFeedback;
+
+                if (result.status === 200) {
+                    alert('Feedback sent successfully!');
+                    addMessage('Thank you for your feedback! We appreciate your input to help improve our service.', 'bot');
+                    document.getElementById('feedbackText').value = '';
+                    currentRating = 0;
+                    highlightStars(0);
+                    document.querySelector('.feedback-section').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Feedback submission error:', error);
+                alert(`Error sending feedback: ${error.text || 'Please try again later'}`);
+                
+                const submitButton = document.querySelector('.feedback-section button');
+                submitButton.disabled = false;
+                submitButton.textContent = translations[currentLang].submitFeedback;
+            }
+        }
+
+        function setupVoiceInput() {
+            if ('webkitSpeechRecognition' in window) {
+                const recognition = new webkitSpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                
+                recognition.onresult = function(event) {
+                    const text = event.results[0][0].transcript;
+                    document.getElementById('userInput').value = text;
+                };
+                
+                const voiceButton = document.createElement('button');
+                voiceButton.className = 'voice-input';
+                voiceButton.innerHTML = '🎤';
+                voiceButton.onclick = () => recognition.start();
+                
+                document.querySelector('.chat-input').appendChild(voiceButton);
+            }
+        }
+
+        setupVoiceInput();
+    </script>
+</body>
+</html>
