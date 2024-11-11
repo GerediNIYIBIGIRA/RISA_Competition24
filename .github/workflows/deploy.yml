@@ -1,22 +1,5 @@
-name: Deploy HTML with OpenAI Key
-
-on:
-  push:
-    branches:
-      - main  # Trigger this workflow when pushing to the main branch
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Deploy HTML
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          # Deployment steps go here, for example:
-          echo "Starting deployment..."
-          # Here, use the API key if needed in a secure way
+env:
+  EMAILJS_KEY: ${{ secrets.EMAILJS_KEY }}
+  GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+  TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
