@@ -1,5 +1,33 @@
-env:
-  EMAILJS_KEY: ${{ secrets.EMAILJS_KEY }}
-  GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-  TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
-  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+name: Deploy to Heroku
+
+on:
+  push:
+    branches:
+      - main  # Deploys whenever there is a push to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # Specify your Node.js version
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build  # Adjust if you have a specific build script
+
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12  # GitHub Action for Heroku
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+          branch: main
